@@ -41,12 +41,12 @@ class UserChannel extends ConsumerWidget {
                   radius: 35,
                   backgroundColor: Colors.grey,
                   backgroundImage:
-                      CachedNetworkImageProvider(userModel!.profilePic),
+                      CachedNetworkImageProvider(userModel!.profilePic!),
                 ),
               ),
               Center(
                 child: Text(
-                  userModel!.displayName,
+                  userModel!.displayName!,
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

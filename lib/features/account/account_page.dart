@@ -44,7 +44,8 @@ class AccountSheet extends StatelessWidget {
                     child: CircleAvatar(
                       backgroundColor: Colors.grey,
                       backgroundImage: CachedNetworkImageProvider(
-                        userModel.profilePic,
+                        //TODO
+                        userModel.profilePic!,
                       ),
                     ),
                   ),

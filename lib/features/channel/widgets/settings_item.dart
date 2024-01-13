@@ -16,7 +16,7 @@ class SettingsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10, top: 6, bottom: 4),
+      padding: const EdgeInsets.only(left: 16, right: 14, top: 6, bottom: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -35,7 +35,7 @@ class SettingsItem extends StatelessWidget {
             ],
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: onPressed,
             child: Image.asset(
               "assets/icons/pen.png",
               height: 21,

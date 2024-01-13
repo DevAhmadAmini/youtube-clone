@@ -5,9 +5,9 @@ import 'package:youtube_clone/cores/widgets/flat_button.dart';
 import 'package:youtube_clone/features/auth/data/model/user.dart';
 import 'package:youtube_clone/features/channel/screens/users_channels.dart';
 
-class SearchTileWidget extends StatelessWidget {
+class SearchUserTileWidget extends StatelessWidget {
   final UserModel userModel;
-  const SearchTileWidget({
+  const SearchUserTileWidget({
     Key? key,
     required this.userModel,
   }) : super(key: key);
@@ -42,42 +42,46 @@ class SearchTileWidget extends StatelessWidget {
                   radius: 42,
                   backgroundColor: Colors.grey,
                   backgroundImage:
-                      CachedNetworkImageProvider(userModel.profilePic),
+                      CachedNetworkImageProvider(userModel.profilePic!),
                 ),
                 const SizedBox(width: 9),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      userModel.displayName,
+                      userModel.displayName!,
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
+                        fontSize: 14.5,
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 5, bottom: 5),
                       child: Text(
-                        userModel.username,
+                        userModel.username!,
                         style: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 13.6,
                           color: Colors.blueGrey,
                         ),
                       ),
                     ),
                     Text(
-                      userModel.suberscribers.toString(),
+                      "${userModel.suberscribers}",
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.blueGrey,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    FlatButton(
-                      text: "Subscribe",
-                      onPressed: () {
-                        //TODO subscribe the channel
-                      },
-                      colour: Colors.black,
+                    SizedBox(
+                      height: 35,
+                      child: FlatButton(
+                        text: "Subscribe",
+                        onPressed: () {
+                          //TODO subscribe the channel
+                        },
+                        colour: Colors.black,
+                      ),
                     ),
                   ],
                 ),

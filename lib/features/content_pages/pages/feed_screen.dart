@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youtube_clone/cores/widgets/loader.dart';
-import 'package:youtube_clone/features/feed/widgets/post.dart';
+import 'package:youtube_clone/features/content_pages/widgets/post.dart';
 import 'package:youtube_clone/features/upload/models/video_model.dart';
 import '../../auth/providers/user_provider.dart';
 

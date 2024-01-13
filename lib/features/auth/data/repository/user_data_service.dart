@@ -21,29 +21,68 @@ class UserService {
   });
 
   addUserDataToFirestore(
-      GoogleSignInAccount user, String userId, String username) async {
+    String displayName,
+    String email,
+    String userPhotoUrl,
+    String userId,
+    String username,
+  ) async {
+    String photoUrl =
+        "https://img.freepik.com/free-photo/gray-painted-background_53876-94041.jpg?w=1060&t=st=1698410195~exp=1698410795~hmac=4aac5ab6f61188883d55610b76e3fb224db3b6bdf744ef5bd99f4bcae524f43a";
+
+    if (userPhotoUrl != null) {
+      photoUrl = userPhotoUrl;
+    }
     UserModel userInfo = UserModel(
-      displayName: user.displayName!,
+      displayName: displayName,
       username: username,
-      email: user.email,
-      profilePic: user.photoUrl!,
-      suberscribers: 0,
+      email: email,
+      profilePic: photoUrl,
+      suberscribers: [],
       videos: 0,
       views: 3,
       userId: userId,
+      description: "",
     );
     await firestore.collection("users").doc(userId).set(
           userInfo.toMap(),
         );
   }
 
-  Future<UserModel> retrieveUserData() async {
+  // Future retrieveUserData() async {
+  //   final userDataMap =
+  //       await FirebaseFirestore.instance.collection("users").get();
+  // }
+
+  Future<UserModel> retrieveCurrentUserData() async {
     final userDataMap = await FirebaseFirestore.instance
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
 
-    UserModel userData = UserModel.fromMap(userDataMap.data()!);
-    return userData;
+    final UserModel userModel = UserModel(
+      description: userDataMap["description"],
+      displayName: userDataMap["displayName"],
+      email: userDataMap["email"],
+      profilePic: userDataMap["profilePic"],
+      suberscribers: userDataMap["suberscribers"],
+      userId: userDataMap["userId"],
+      username: userDataMap["username"],
+      videos: userDataMap["videos"],
+      views: userDataMap["views"],
+    );
+    return userModel;
+  }
+
+  retrieveCurrentUserData2() async {
+    final userDataMap = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    if (userDataMap != null) {
+      UserModel userModel = UserModel.fromMap(userDataMap.data()!);
+
+      return userModel;
+    }
   }
 }

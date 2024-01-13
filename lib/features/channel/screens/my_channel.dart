@@ -14,7 +14,7 @@ class MyChannel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.read(userDataProvider).when(
+    return ref.read(currentUserDataProvider).when(
           data: (user) {
             return DefaultTabController(
               length: 6,
@@ -76,8 +76,9 @@ class MyChannel extends ConsumerWidget {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ChannelSettings(),
+                                        builder: (context) => ChannelSettings(
+                                          userModel: user,
+                                        ),
                                       ),
                                     );
                                   },

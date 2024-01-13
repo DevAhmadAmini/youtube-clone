@@ -11,9 +11,12 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      elevation: 1.0,
       backgroundColor: Colors.white,
       leading: IconButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pop(context);
+        },
         icon: const Icon(
           Icons.arrow_back_sharp,
           color: Colors.black,
@@ -32,23 +35,25 @@ class CustomAppBar extends StatelessWidget {
           child: const Icon(
             Icons.cast,
             color: Colors.black,
-            size: 21,
+            size: 23,
           ),
         ),
+        const SizedBox(width: 4),
         const Padding(
           padding: EdgeInsets.only(left: 14, right: 7),
           child: Icon(
             Icons.search,
             color: Colors.black,
-            size: 21,
+            size: 23,
           ),
         ),
+        const SizedBox(width: 4),
         GestureDetector(
           onTap: () {},
           child: const Icon(
             Icons.more_vert,
             color: Colors.black,
-            size: 21,
+            size: 22,
           ),
         ),
         const SizedBox(width: 6)

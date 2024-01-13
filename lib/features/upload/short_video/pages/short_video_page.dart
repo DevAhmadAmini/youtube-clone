@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:video_editor/video_editor.dart';
 import 'package:youtube_clone/cores/screens/show_error.dart';
 import 'package:youtube_clone/cores/widgets/loader.dart';
-import 'package:youtube_clone/features/upload/short_video/cover_selection_page.dart';
+import 'package:youtube_clone/features/upload/short_video/pages/short_video_detail_page.dart';
 import 'package:youtube_clone/features/upload/short_video/export_service.dart';
 import 'package:youtube_clone/features/upload/short_video/widgets/trim_slinder.dart';
 
@@ -55,15 +55,14 @@ class _ShortVideoScreenState extends State<ShortVideoScreen> {
       },
       onError: (e, s) => showErrorSnackBar("Error on export video :(", context),
       onCompleted: (file) async {
+        // this file is the short video we need
         _isExporting.value = false;
         if (!mounted) return;
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CoverSelectionPage(
-              controller: editorController!,
-              height: height,
-              editedVideo: file,
+            builder: (context) => ShortVideoDetailPage(
+              shortVideo: file,
             ),
           ),
         );
@@ -161,7 +160,7 @@ class _ShortVideoScreenState extends State<ShortVideoScreen> {
                                 await exportVideo();
                               },
                               child: const Text(
-                                "Done",
+                                "DONE",
                                 style: TextStyle(
                                   color: Colors.black,
                                 ),

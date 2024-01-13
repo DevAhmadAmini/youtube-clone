@@ -20,12 +20,12 @@ class ChannelUserInfo extends StatelessWidget {
           child: CircleAvatar(
             radius: 31,
             backgroundColor: Colors.grey,
-            backgroundImage: CachedNetworkImageProvider(user.profilePic),
+            backgroundImage: CachedNetworkImageProvider(user.profilePic!),
           ),
         ),
         const SizedBox(height: 15),
         Text(
-          user.displayName,
+          user.displayName!,
           style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w600,

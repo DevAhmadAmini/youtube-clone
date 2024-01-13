@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:youtube_clone/features/feed/widgets/create_bottom_sheet.dart';
+import 'package:youtube_clone/features/content_pages/widgets/create_bottom_sheet.dart';
 
 class BottomNavigation extends StatefulWidget {
   final Function(int index) onPressed;

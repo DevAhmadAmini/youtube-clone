@@ -1,29 +1,34 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:io';
 
 class ShortVideoModel {
   final String caption;
-  final File video;
-  final File tumbnail;
+  final String video;
+  final DateTime datePublished;
+  final String userId;
+
   ShortVideoModel({
     required this.caption,
     required this.video,
-    required this.tumbnail,
+    required this.datePublished,
+    required this.userId,
   });
 
-  // Map<String, dynamic> toMap() {
-  //   return <String, dynamic>{
-  //     'caption': caption,
-  //     'video': video.toMap(),
-  //     'tumbnail': tumbnail.toMap(),
-  //   };
-  // }
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'caption': caption,
+      'video': video,
+      'datePublished': datePublished.millisecondsSinceEpoch,
+      "userId": userId,
+    };
+  }
 
-  // factory ShortVideoModel.fromMap(Map<String, dynamic> map) {
-  //   return ShortVideoModel(
-  //     caption: map['caption'] as String,
-  //     video: File.fromMap(map['video'] as Map<String, dynamic>),
-  //     tumbnail: File.fromMap(map['tumbnail'] as Map<String, dynamic>),
-  //   );
-  // }
+  factory ShortVideoModel.fromMap(Map<String, dynamic> map) {
+    return ShortVideoModel(
+      caption: map['caption'] as String,
+      video: map['video'] as String,
+      userId: map["userId"] as String,
+      datePublished:
+          DateTime.fromMillisecondsSinceEpoch(map['datePublished'] as int),
+    );
+  }
 }

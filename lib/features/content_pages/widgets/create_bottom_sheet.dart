@@ -1,11 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:youtube_clone/cores/methods.dart';
 import 'package:youtube_clone/cores/widgets/image_item.dart';
-import 'package:youtube_clone/features/auth/data/repository/user_data_service.dart';
-import 'package:youtube_clone/features/upload/repository/video_repository.dart';
+import 'package:youtube_clone/features/upload/long_video/video_detail_page.dart';
 
 class CreateBottomSheet extends ConsumerStatefulWidget {
   const CreateBottomSheet({super.key});
@@ -15,8 +16,6 @@ class CreateBottomSheet extends ConsumerStatefulWidget {
 }
 
 class _CreateBottomSheetState extends ConsumerState<CreateBottomSheet> {
-  final DateTime datePublished = DateTime.now();
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -56,20 +55,20 @@ class _CreateBottomSheetState extends ConsumerState<CreateBottomSheet> {
                 child: ImageItem(
                   itemText: "Upload a Video",
                   itemClicked: () async {
-                    final currentUserData = await ref
-                        .watch(userDataServiceProvider)
-                        .retrieveUserData();
+                    // just pick the video for now
                     File video = await pickVideo(ImageSource.gallery);
-                    String videoUrl = await putFileOnStorage(video);
-                    ref.watch(videoRepositoryProvider).uploadVideoFirestore(
-                          user: currentUserData,
-                          datePublished: datePublished,
-                          videoUrl: videoUrl,
-                          views: 0,
-                          tumbnail:
-                              "https://th.bing.com/th/id/R.3ebb97805a3f4408dc8304d137b0ec26?rik=CFhCh7ooNlGTGA&pid=ImgRaw&r=0",
-                          title: "This is our first video",
-                        );
+
+                    // Navigate to new page to complete details
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return VideoDetailScreen(
+                            video: video,
+                          );
+                        },
+                      ),
+                    );
                   },
                   imageName: "upload.png",
                   haveColor: true,

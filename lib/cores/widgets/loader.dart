@@ -7,10 +7,10 @@ class Loader extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: SizedBox(
-        height: 22,
-        width: 22,
+        height: 24,
+        width: 24,
         child: CircularProgressIndicator(
-          color: Colors.pink,
+          color: Colors.blue,
           strokeWidth: 1.8,
         ),
       ),

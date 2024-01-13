@@ -1,18 +1,34 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_clone/cores/colors.dart';
 import 'package:youtube_clone/cores/widgets/custom_appbar.dart';
+import 'package:youtube_clone/features/auth/data/model/user.dart';
 import 'package:youtube_clone/features/channel/widgets/settings_dialog.dart';
 import 'package:youtube_clone/features/channel/widgets/settings_item.dart';
 
-class ChannelSettings extends StatelessWidget {
-  const ChannelSettings({super.key});
+class ChannelSettings extends StatefulWidget {
+  final UserModel userModel;
+  const ChannelSettings({
+    Key? key,
+    required this.userModel,
+  }) : super(key: key);
 
+  @override
+  State<ChannelSettings> createState() => _ChannelSettingsState();
+}
+
+class _ChannelSettingsState extends State<ChannelSettings> {
+  bool switchValue = false;
+  TextEditingController? controller;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(50),
+        preferredSize: Size.fromHeight(60),
         child: CustomAppBar(
           title: "Channel Settings",
         ),
@@ -28,22 +44,18 @@ class ChannelSettings extends StatelessWidget {
                   width: 900,
                   child: CachedNetworkImage(
                     imageUrl:
-                        "https://th.bing.com/th/id/OIP._IgGc9h6kbuSmYLsRhBNvwHaEo?pid=ImgDet&rs=1",
+                        "https://www.pixelstalk.net/wp-content/uploads/2016/06/HD-High-Tech-Image.jpg",
                     width: 900,
                     fit: BoxFit.cover,
                   ),
                 ),
                 Positioned(
-                  left: 150,
+                  left: 184,
                   top: 21,
                   child: CircleAvatar(
-                    radius: 27,
-                    backgroundColor: Colors.grey,
-                    child: Image.asset(
-                      "assets/icons/camera.png",
-                      color: Colors.white,
-                      height: 18,
-                    ),
+                    radius: 30,
+                    backgroundColor: Colors.grey.shade400,
+                    backgroundImage: NetworkImage(widget.userModel.profilePic!),
                   ),
                 ),
                 Positioned(
@@ -59,16 +71,25 @@ class ChannelSettings extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 12),
             SettingsItem(
               identifier: "Name",
-              value: "Code HQ",
+              value: widget.userModel.displayName!,
               onPressed: () {
                 showDialog(
                   context: context,
                   builder: (context) {
                     return SettingsDialog(
-                      identifier: "Name",
-                      onSave: () {},
+                      identifier: "Enter the new channel Name",
+                      onSave: (name) {
+                        // update the channel name
+                        FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .update({
+                          "displayName": name,
+                        });
+                      },
                     );
                   },
                 );
@@ -83,8 +104,16 @@ class ChannelSettings extends StatelessWidget {
                   context: context,
                   builder: (context) {
                     return SettingsDialog(
-                      identifier: "Handle",
-                      onSave: () {},
+                      identifier: "Enter the new username",
+                      onSave: (username) {
+                        // update the username
+                        FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .update({
+                          "username": username,
+                        });
+                      },
                     );
                   },
                 );
@@ -93,14 +122,22 @@ class ChannelSettings extends StatelessWidget {
             const Divider(color: Colors.grey),
             SettingsItem(
               identifier: "Description",
-              value: "Making code easy and fun",
+              value: widget.userModel.description!,
               onPressed: () {
                 showDialog(
                   context: context,
                   builder: (context) {
                     return SettingsDialog(
-                      identifier: "Description",
-                      onSave: () {},
+                      identifier: "Enter the new Description",
+                      onSave: (description) {
+                        // update the description of channel
+                        FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .update({
+                          "description": description,
+                        });
+                      },
                     );
                   },
                 );
@@ -108,7 +145,7 @@ class ChannelSettings extends StatelessWidget {
             ),
             const Divider(color: Colors.grey),
             const Padding(
-              padding: EdgeInsets.only(top: 6, bottom: 17, left: 10),
+              padding: EdgeInsets.only(top: 6, bottom: 17, left: 16),
               child: Text(
                 "Privacy",
                 style: TextStyle(
@@ -118,21 +155,24 @@ class ChannelSettings extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 10, right: 7),
+              padding: const EdgeInsets.only(left: 16, right: 3),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text("Keep all my Subscribers private"),
                   Switch(
-                    value: false,
-                    onChanged: (value) {},
+                    value: switchValue,
+                    onChanged: (value) {
+                      switchValue = value;
+                      setState(() {});
+                    },
                     activeColor: Colors.black,
                   ),
                 ],
               ),
             ),
             const Padding(
-              padding: EdgeInsets.only(top: 8),
+              padding: EdgeInsets.only(top: 12),
               child: Text(
                 "Changes made on your name and profile picture are visible only to youtube and not other Google services",
                 style: TextStyle(

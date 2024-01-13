@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youtube_clone/features/auth/data/model/user.dart';
@@ -31,6 +32,7 @@ class VideoRepository {
       views: views,
       videoId: videoId,
       user: user,
+      likes: [],
     );
 
     await firestore.collection("videos").doc(videoId).set(
@@ -38,14 +40,16 @@ class VideoRepository {
         );
   }
 
-  retrieveVideoFirestore() async {
-    final videoDataMap = await firestore
-        .collection("content")
-        .doc()
-        .collection("videos")
-        .doc()
-        .get();
-    VideoModel videoModel = VideoModel.fromMap(videoDataMap.data()!);
-    return videoModel;
+  likeVideo(videoId, ownUserId, currentUserId, List likesList) async {
+    if (!likesList.contains(currentUserId)) {
+      await firestore.collection("videos").doc(videoId).update({
+        "likes": FieldValue.arrayUnion([currentUserId])
+      });
+    }
+    if (likesList.contains(currentUserId)) {
+      await firestore.collection("videos").doc(videoId).update({
+        "likes": FieldValue.arrayRemove([currentUserId])
+      });
+    }
   }
 }

@@ -10,6 +10,7 @@ class VideoModel {
   final int views;
   final String videoId;
   final UserModel user;
+  final List likes;
   VideoModel({
     required this.videoUrl,
     required this.tumbnail,
@@ -18,6 +19,7 @@ class VideoModel {
     required this.views,
     required this.videoId,
     required this.user,
+    required this.likes,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,6 +31,7 @@ class VideoModel {
       'views': views,
       'videoId': videoId,
       'user': user.toMap(),
+      'likes': likes,
     };
   }
 
@@ -42,6 +45,9 @@ class VideoModel {
       views: map['views'] as int,
       videoId: map['videoId'] as String,
       user: UserModel.fromMap(map['user'] as Map<String, dynamic>),
+      likes: List.from(
+        (map['likes'] as List),
+      ),
     );
   }
 }

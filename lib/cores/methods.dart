@@ -3,7 +3,7 @@
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:youtube_clone/features/upload/short_video/short_page.dart';
+import 'package:youtube_clone/features/upload/short_video/pages/short_video_page.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 FirebaseStorage storage = FirebaseStorage.instance;
@@ -41,8 +41,8 @@ pickImage(ImageSource imageSource) async {
   }
 }
 
-putFileOnStorage(video) async {
-  final ref = storage.ref().child("videos");
+putFileOnStorage(video, number, fileType) async {
+  final ref = storage.ref().child("$fileType/$number");
   UploadTask upload = ref.putFile(video);
   TaskSnapshot snapshot = await upload;
   String videoUrl = await snapshot.ref.getDownloadURL();
