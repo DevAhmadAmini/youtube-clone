@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:youtube_clone/cores/widgets/loader.dart';
-import 'package:youtube_clone/features/auth/data/model/user.dart';
+import 'package:youtube_clone/features/auth/model/user_model.dart';
 import 'package:youtube_clone/features/auth/pages/login_page.dart';
 import 'package:youtube_clone/features/auth/pages/username_page.dart';
 import 'package:youtube_clone/home_page.dart';
@@ -25,7 +25,9 @@ void main() async {
 }
 
 final FirebaseAuth auth = FirebaseAuth.instance;
-UserModel userModel = UserModel();
+UserModel userModel = UserModel(
+  type: "user",
+);
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
@@ -37,13 +39,10 @@ class MyApp extends ConsumerWidget {
       home: StreamBuilder(
         stream: auth.authStateChanges(),
         builder: (context, snapshot) {
-          final User? user = snapshot.data;
-          if (!snapshot.hasData || snapshot.data == null) {
+          if (!snapshot.hasData) {
             return const LoginPage();
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Loader();
-          } else if (user == null) {
-            return const LoginPage();
           }
           return StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance

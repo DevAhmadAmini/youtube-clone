@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,19 +12,21 @@ import 'package:youtube_clone/cores/screens/error_page.dart';
 import 'package:youtube_clone/cores/widgets/flat_button.dart';
 import 'package:youtube_clone/cores/widgets/loader.dart';
 import 'package:youtube_clone/features/content_pages/pages/comment_sheet.dart';
-import 'package:youtube_clone/features/content_pages/repository.dart';
+import 'package:youtube_clone/features/content_pages/content_repository.dart';
 import 'package:youtube_clone/features/content_pages/widgets/post.dart';
-import 'package:youtube_clone/features/upload/comment/provider.dart';
+import 'package:youtube_clone/features/upload/comment/comment_provider.dart';
+import 'package:youtube_clone/features/upload/long_video/long_video_repository.dart';
 import 'package:youtube_clone/features/upload/models/video_model.dart';
-import 'package:youtube_clone/features/upload/long_video/video_repository.dart';
 
 class Video extends ConsumerStatefulWidget {
   final VideoModel video;
   final String videoId;
+  final user;
   const Video({
     Key? key,
     required this.video,
     required this.videoId,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -73,10 +74,12 @@ class _VideoState extends ConsumerState<Video> {
 
   @override
   Widget build(BuildContext context) {
-    log("${widget.video.user.suberscribers}");
-    log("${widget.video.user.displayName}");
-    log("${widget.video.user.email}");
+    final AsyncValue<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+        comments = ref.watch(
+      commentProvider(widget.videoId),
+    );
 
+    final commentsData = comments.whenData((value) => value);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey,
@@ -234,13 +237,13 @@ class _VideoState extends ConsumerState<Video> {
                     radius: 14,
                     backgroundColor: Colors.grey,
                     backgroundImage: CachedNetworkImageProvider(
-                      widget.video.user.profilePic!,
+                      widget.user["profilePic"],
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 10, right: 5),
                     child: Text(
-                      widget.video.user.displayName!,
+                      widget.user["displayName"],
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
                       ),
@@ -248,7 +251,8 @@ class _VideoState extends ConsumerState<Video> {
                   ),
                   const SizedBox(width: 6),
                   Text(
-                    "${widget.video.user.suberscribers!.length}",
+                    // "${widget.user["subscriptions!"].lenght}",
+                    "",
                     style: const TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w500,
@@ -263,12 +267,12 @@ class _VideoState extends ConsumerState<Video> {
                       onPressed: () {
                         // subscribe the channel which has posted the video
                         ref.read(subscribeRepository).subscribeChannel(
-                              videoId: widget.videoId,
-                              specificUserId: widget.video.user.userId,
-                              currentUserId:
-                                  FirebaseAuth.instance.currentUser!.uid,
-                              subscribers: widget.video.user.suberscribers!,
-                            );
+                          videoId: widget.videoId,
+                          specificUserId: widget.video.userId,
+                          currentUserId: FirebaseAuth.instance.currentUser!.uid,
+                          // subscribers: widget.video.user.subscriptions!,
+                          subscribers: [],
+                        );
                       },
                       colour: Colors.black,
                     ),
@@ -297,10 +301,9 @@ class _VideoState extends ConsumerState<Video> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              print("liked");
                               ref.read(videoRepositoryProvider).likeVideo(
                                     widget.videoId,
-                                    widget.video.user.userId,
+                                    widget.video.userId,
                                     FirebaseAuth.instance.currentUser!.uid,
                                     widget.video.likes,
                                   );
@@ -395,7 +398,6 @@ class _VideoState extends ConsumerState<Video> {
                   context: context,
                   builder: (context) {
                     return CommentSheet(
-                      user: widget.video.user,
                       videoId: widget.videoId,
                     );
                   },
@@ -453,7 +455,7 @@ class _VideoState extends ConsumerState<Video> {
                                         backgroundColor: Colors.grey,
                                         backgroundImage:
                                             CachedNetworkImageProvider(
-                                          widget.video.user.profilePic!,
+                                          data[0].data()["profilePic"],
                                         ),
                                       ),
                                       const SizedBox(width: 7),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_clone/cores/widgets/image_item.dart';
-import 'package:youtube_clone/features/channel/screens/my_channel.dart';
+import 'package:youtube_clone/features/channel/presentation/screens/my_channel.dart';
 
 class Items extends StatelessWidget {
   const Items({super.key});

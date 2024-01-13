@@ -26,14 +26,14 @@ class CommentTile extends StatelessWidget {
                 child: CircleAvatar(
                   backgroundColor: Colors.grey,
                   backgroundImage:
-                      CachedNetworkImageProvider(comment.user.profilePic!),
+                      CachedNetworkImageProvider(comment.profilePic),
                   radius: 14.5,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 8),
                 child: Text(
-                  comment.user.displayName!,
+                  comment.displayName,
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,

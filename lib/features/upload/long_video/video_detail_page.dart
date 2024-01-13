@@ -1,13 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, use_build_context_synchronously
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:youtube_clone/cores/methods.dart';
-import 'package:youtube_clone/features/auth/data/repository/user_data_service.dart';
+import 'package:youtube_clone/features/auth/model/user_model.dart';
+import 'package:youtube_clone/features/auth/repository/user_data_service.dart';
 import 'package:youtube_clone/features/content_pages/pages/feed_screen.dart';
-import 'package:youtube_clone/features/upload/long_video/video_repository.dart';
+import 'package:youtube_clone/features/upload/long_video/long_video_repository.dart';
 
 class VideoDetailScreen extends ConsumerStatefulWidget {
   final File? video;
@@ -123,30 +125,39 @@ class _VideoDetailScreenState extends ConsumerState<VideoDetailScreen> {
                       child: TextButton(
                         onPressed: () async {
                           // publish video to firestore
-                          final currentUserData = await ref
+                          final UserModel currentUserData = await ref
                               .watch(userDataServiceProvider)
                               .retrieveCurrentUserData();
+
+                          log("we retrieved current user data");
 
                           String videoUrl = await putFileOnStorage(
                             widget.video,
                             randomNumber,
                             "video",
                           );
+                          log("we put the video in storage");
                           String thumbnailUrl = await putFileOnStorage(
                             image!,
                             randomNumber,
                             "image",
                           );
+                          // log("thumbnail uploaded to storage");
+                          // log("This is the video URl$videoUrl");
+                          // log("This is the current display Name${currentUserData.displayName}");
+                          // log("This is the thumbnail URL$thumbnailUrl");
                           ref
                               .watch(videoRepositoryProvider)
                               .uploadVideoFirestore(
-                                user: currentUserData,
+                                userId: currentUserData.userId!,
                                 datePublished: datePublished,
                                 videoUrl: videoUrl,
                                 views: 0,
                                 tumbnail: thumbnailUrl,
                                 title: titleController.text,
                               );
+
+                          log("uploading done");
                           Navigator.push(
                             context,
                             MaterialPageRoute(

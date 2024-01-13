@@ -6,9 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_clone/cores/colors.dart';
 import 'package:youtube_clone/cores/widgets/custom_appbar.dart';
-import 'package:youtube_clone/features/auth/data/model/user.dart';
-import 'package:youtube_clone/features/channel/widgets/settings_dialog.dart';
-import 'package:youtube_clone/features/channel/widgets/settings_item.dart';
+import 'package:youtube_clone/features/auth/model/user_model.dart';
+import 'package:youtube_clone/features/channel/presentation/widgets/settings_dialog.dart';
+import 'package:youtube_clone/features/channel/presentation/widgets/settings_item.dart';
 
 class ChannelSettings extends StatefulWidget {
   final UserModel userModel;

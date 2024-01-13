@@ -1,22 +1,20 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youtube_clone/cores/screens/error_page.dart';
 import 'package:youtube_clone/cores/widgets/loader.dart';
-import 'package:youtube_clone/features/auth/data/model/user.dart';
 import 'package:youtube_clone/features/auth/providers/user_provider.dart';
 import 'package:youtube_clone/features/content_pages/widgets/comment_tile.dart';
 import 'package:youtube_clone/features/upload/comment/comment_repository.dart';
-import 'package:youtube_clone/features/upload/comment/provider.dart';
+import 'package:youtube_clone/features/upload/comment/comment_provider.dart';
 import 'package:youtube_clone/features/upload/models/comment_model.dart';
 
 class CommentSheet extends StatefulWidget {
-  final UserModel user;
   final String videoId;
-
   CommentSheet({
-    required this.user,
     required this.videoId,
   });
 
@@ -32,8 +30,16 @@ class _CommentSheetState extends State<CommentSheet> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
+        // getting current user data
+
+        final user =
+            ref.watch(currentUserDataProvider).whenData((value) => value);
+
+        // getting comments
         final AsyncValue<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
-            comments = ref.watch(commentProvider(widget.videoId));
+            comments = ref.watch(
+          commentProvider(widget.videoId),
+        );
         return comments.when(
           data: (data) {
             return Column(
@@ -95,8 +101,10 @@ class _CommentSheetState extends State<CommentSheet> {
                   padding: const EdgeInsets.only(left: 7),
                   child: Row(
                     children: [
-                      const CircleAvatar(
+                      CircleAvatar(
                         radius: 17,
+                        backgroundImage:
+                            CachedNetworkImageProvider(user.value!.profilePic!),
                       ),
                       const SizedBox(width: 13),
                       SizedBox(
@@ -115,36 +123,30 @@ class _CommentSheetState extends State<CommentSheet> {
                           ),
                         ),
                       ),
-                      Consumer(
-                        builder: (context, ref, child) {
-                          return ref.watch(currentUserDataProvider).when(
-                                data: (data) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(left: 8),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        ref
-                                            .read(commentRepositoryProvider)
-                                            .addCommentOnFirestore(
-                                              user: data,
-                                              videoId: widget.videoId,
-                                              commentText:
-                                                  commentController.text,
-                                              date: DateTime.now(),
-                                            );
-                                      },
-                                      child: const Icon(
-                                        Icons.send,
-                                        size: 29,
-                                        color: Colors.green,
-                                      ),
-                                    ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: GestureDetector(
+                          onTap: () {
+                            ref
+                                .watch(currentUserDataProvider)
+                                .whenData((value) {
+                              return ref
+                                  .read(commentRepositoryProvider)
+                                  .addCommentOnFirestore(
+                                    displayName: value.displayName!,
+                                    profilePic: value.profilePic!,
+                                    videoId: widget.videoId,
+                                    commentText: commentController.text,
+                                    date: DateTime.now(),
                                   );
-                                },
-                                error: (error, stackTrace) => const ErrorPage(),
-                                loading: () => const Loader(),
-                              );
-                        },
+                            });
+                          },
+                          child: const Icon(
+                            Icons.send,
+                            size: 29,
+                            color: Colors.green,
+                          ),
+                        ),
                       ),
                     ],
                   ),

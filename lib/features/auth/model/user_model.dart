@@ -4,22 +4,22 @@ class UserModel {
   final String? username;
   final String? email;
   final String? profilePic;
-  final List? suberscribers;
+  final List? subscriptions;
   final int? videos;
-  final int? views;
   String? userId;
   final String? description;
+  final String? type;
 
   UserModel({
     this.displayName,
     this.username,
     this.email,
     this.profilePic,
-    this.suberscribers,
+    this.subscriptions,
     this.videos,
-    this.views,
     this.userId,
     this.description,
+    this.type,
   });
 
   Map<String, dynamic> toMap() {
@@ -28,12 +28,11 @@ class UserModel {
       'username': username,
       'email': email,
       'profilePic': profilePic,
-      'suberscribers':
-          suberscribers?.map((subscriber) => subscriber.toMap()).toList(),
+      'subscriptions': subscriptions,
       'videos': videos,
-      'views': views,
       'userId': userId,
       'description': description,
+      'type': type,
     };
   }
 
@@ -45,17 +44,14 @@ class UserModel {
       email: map['email'] != null ? map['email'] as String : null,
       profilePic:
           map['profilePic'] != null ? map['profilePic'] as String : null,
-      suberscribers: map['suberscribers'] != null
-          ? List<Map<String, dynamic>>.from(
-                  map['suberscribers'] as List<dynamic>)
-              .map((subscriber) => Map<String, dynamic>.from(subscriber))
-              .toList() // Deserialize each subscriber
-          : null,
+      subscriptions: List<String>.from(
+        (map["subscriptions"] ?? []),
+      ),
       videos: map['videos'] != null ? map['videos'] as int : null,
-      views: map['views'] != null ? map['views'] as int : null,
       userId: map['userId'] != null ? map['userId'] as String : null,
       description:
           map['description'] != null ? map['description'] as String : null,
+      type: map['type'] != null ? map['type'] as String : null,
     );
   }
 }

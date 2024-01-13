@@ -1,27 +1,19 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youtube_clone/cores/widgets/custom_button.dart';
 import 'package:youtube_clone/cores/widgets/flat_button.dart';
-import 'package:youtube_clone/features/auth/data/model/user.dart';
+import 'package:youtube_clone/features/auth/model/user_model.dart';
+import 'package:youtube_clone/features/channel/repository/subscribe_repository.dart';
 
 class UserChannel extends ConsumerWidget {
   final UserModel? userModel;
   const UserChannel({super.key, this.userModel});
-
+  //b
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // ref.read(testStreamProvider).when(
-    //   data: (data) {
-    //     return ListView.builder(
-    //       itemBuilder: (context, index) {
-    //         final map = data.docs[index];
-    //         final UserModel user = UserModel.fromMap(map.data());
-    //       },
-    //     );
-    //   },
-    // );
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -65,7 +57,7 @@ class UserChannel extends ConsumerWidget {
                         text: userModel!.username,
                       ),
                       TextSpan(
-                        text: "  ${userModel!.suberscribers} subscribers",
+                        text: "  ${userModel!.subscriptions} subscribers",
                       ),
                       TextSpan(
                         text: "  ${userModel!.videos} videos",
@@ -111,7 +103,14 @@ class UserChannel extends ConsumerWidget {
               ),
               FlatButton(
                 colour: Colors.black,
-                onPressed: () {},
+                onPressed: () async {
+                  await ref.watch(subscribeChannelProvider).subscribeUser(
+                        currentUserId: FirebaseAuth.instance.currentUser!.uid,
+                        subscribedUserId: userModel!.userId,
+                        userSubscriptions: userModel!.subscriptions,
+                        // userVideoId:
+                      );
+                },
                 text: "Subscribe",
               ),
             ],

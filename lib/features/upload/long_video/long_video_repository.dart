@@ -1,8 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:youtube_clone/features/auth/data/model/user.dart';
+import 'package:youtube_clone/features/auth/model/user_model.dart';
 import 'package:youtube_clone/features/upload/models/video_model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -21,23 +23,39 @@ class VideoRepository {
     required String title,
     required int views,
     required DateTime datePublished,
-    required UserModel user,
+    required String userId,
   }) async {
     String videoId = const Uuid().v4();
-    VideoModel video = VideoModel(
-      videoUrl: videoUrl,
-      tumbnail: tumbnail,
-      title: title,
-      datePublished: datePublished,
-      views: views,
-      videoId: videoId,
-      user: user,
-      likes: [],
-    );
+    // VideoModel videoModel = VideoModel(
+    //   videoUrl: videoUrl,
+    //   tumbnail: tumbnail,
+    //   title: title,
+    //   datePublished: datePublished,
+    //   views: views,
+    //   videoId: videoId,
+    //   user: user,
+    //   likes: [],
+    //   type: "video",
+    // );
+    // log("before toMap${videoModel.videoUrl}");
 
-    await firestore.collection("videos").doc(videoId).set(
-          video.toMap(),
-        );
+    try {
+      await firestore.collection("videos").doc(videoId).set({
+        "videoUrl": videoUrl,
+        "tumbnail": tumbnail,
+        "title": title,
+        "datePublished": datePublished,
+        "views": views,
+        "videoId": videoId,
+        "userId": userId,
+        "likes": [],
+        "type": "video",
+      });
+    } catch (e) {
+      log(e.toString());
+    }
+
+    // log("after toMap${videoModel.videoUrl}");
   }
 
   likeVideo(videoId, ownUserId, currentUserId, List likesList) async {

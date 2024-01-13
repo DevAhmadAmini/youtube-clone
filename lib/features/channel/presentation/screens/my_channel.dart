@@ -4,10 +4,10 @@ import 'package:youtube_clone/cores/screens/error_page.dart';
 import 'package:youtube_clone/cores/widgets/image_button.dart';
 import 'package:youtube_clone/cores/widgets/loader.dart';
 import 'package:youtube_clone/features/auth/providers/user_provider.dart';
-import 'package:youtube_clone/features/channel/parts/channel_tab_pages.dart';
-import 'package:youtube_clone/features/channel/parts/channel_tabbar.dart';
-import 'package:youtube_clone/features/channel/parts/channel_user_info.dart';
-import 'package:youtube_clone/features/channel/screens/my_channel_settings.dart';
+import 'package:youtube_clone/features/channel/presentation/parts/channel_tab_pages.dart';
+import 'package:youtube_clone/features/channel/presentation/parts/channel_tabbar.dart';
+import 'package:youtube_clone/features/channel/presentation/parts/channel_user_info.dart';
+import 'package:youtube_clone/features/channel/presentation/screens/my_channel_settings.dart';
 
 class MyChannel extends ConsumerWidget {
   const MyChannel({super.key});

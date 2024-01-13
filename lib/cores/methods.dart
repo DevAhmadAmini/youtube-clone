@@ -15,11 +15,13 @@ pickShortVideo(ImageSource imageSource, BuildContext context) async {
   File video = File(xFile!.path);
   if (video != null) {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ShortVideoScreen(
-                  video: video,
-                )));
+      context,
+      MaterialPageRoute(
+        builder: (context) => ShortVideoScreen(
+          video: video,
+        ),
+      ),
+    );
   }
 }
 

@@ -2,7 +2,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import 'package:youtube_clone/features/auth/data/model/user.dart';
+import 'package:youtube_clone/features/auth/model/user_model.dart';
 
 class ChannelUserInfo extends StatelessWidget {
   final UserModel user;
@@ -44,7 +44,7 @@ class ChannelUserInfo extends StatelessWidget {
                 text: "@AhmadAmini-11",
               ),
               TextSpan(
-                text: "  ${user.suberscribers} subscribers",
+                text: "  ${user.subscriptions} subscribers",
               ),
               TextSpan(
                 text: "  ${user.videos} videos",

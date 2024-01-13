@@ -1,12 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, use_build_context_synchronously
 
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youtube_clone/cores/widgets/flat_button.dart';
-import 'package:youtube_clone/features/auth/data/repository/user_data_service.dart';
-import 'package:youtube_clone/home_page.dart';
+import 'package:youtube_clone/features/auth/repository/user_data_service.dart';
 
 FirebaseAuth auth = FirebaseAuth.instance;
 final formKey = GlobalKey<FormState>();
@@ -15,7 +16,7 @@ class UsernamePage extends ConsumerStatefulWidget {
   final String displayName;
   final String photoUrl;
   final String email;
-  UsernamePage({
+  const UsernamePage({
     Key? key,
     required this.displayName,
     required this.photoUrl,
@@ -32,22 +33,18 @@ class _UsernamePageState extends ConsumerState<UsernamePage> {
 
   validateUsername() async {
     final userMap = await FirebaseFirestore.instance.collection("users").get();
-    final documents = userMap.docs;
-    if (documents.isNotEmpty) {
-      String eachUsername;
-      for (var doc in documents) {
-        eachUsername = doc.data()["username"];
-        if (eachUsername == usernameController.text) {
-          isValidate = false;
-          setState(() {});
-          break;
-        }
-        if (eachUsername != usernameController.text) {
-          isValidate = true;
-          setState(() {});
-          break;
-        }
+    final users = userMap.docs.map((user) => user).toList();
+    String targetedUsername = "something";
+    for (var user in users) {
+      if (usernameController.text == user.data()["username"]) {
+        targetedUsername = user.data()['username'];
+        isValidate = false;
+        setState(() {});
       }
+    }
+    if (targetedUsername != usernameController.text) {
+      isValidate = true;
+      setState(() {});
     }
   }
 
@@ -75,9 +72,11 @@ class _UsernamePageState extends ConsumerState<UsernamePage> {
               Form(
                 key: formKey,
                 child: TextFormField(
+                  onChanged: (username) {
+                    validateUsername();
+                  },
                   autovalidateMode: AutovalidateMode.always,
                   validator: (username) {
-                    validateUsername();
                     return isValidate ? null : "username already taken";
                   },
                   controller: usernameController,

@@ -1,11 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youtube_clone/cores/widgets/flat_button.dart';
-import 'package:youtube_clone/features/auth/data/model/user.dart';
-import 'package:youtube_clone/features/channel/screens/users_channels.dart';
+import 'package:youtube_clone/features/auth/model/user_model.dart';
+import 'package:youtube_clone/features/channel/presentation/screens/users_channels.dart';
+import 'package:youtube_clone/features/channel/repository/subscribe_repository.dart';
 
-class SearchUserTileWidget extends StatelessWidget {
+class SearchUserTileWidget extends ConsumerWidget {
   final UserModel userModel;
   const SearchUserTileWidget({
     Key? key,
@@ -13,7 +16,7 @@ class SearchUserTileWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -66,7 +69,9 @@ class SearchUserTileWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "${userModel.suberscribers}",
+                      userModel.subscriptions!.isEmpty
+                          ? "No Subscribers"
+                          : "${userModel.subscriptions!.length} Subscribers",
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.blueGrey,
@@ -77,8 +82,16 @@ class SearchUserTileWidget extends StatelessWidget {
                       height: 35,
                       child: FlatButton(
                         text: "Subscribe",
-                        onPressed: () {
-                          //TODO subscribe the channel
+                        onPressed: () async {
+                          await ref
+                              .read(subscribeChannelProvider)
+                              .subscribeUser(
+                                currentUserId:
+                                    FirebaseAuth.instance.currentUser!.uid,
+                                subscribedUserId: userModel.userId,
+                                userSubscriptions: userModel.subscriptions,
+                                // userVideoId:
+                              );
                         },
                         colour: Colors.black,
                       ),

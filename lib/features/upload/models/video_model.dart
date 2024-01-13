@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import 'package:youtube_clone/features/auth/data/model/user.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class VideoModel {
   final String videoUrl;
@@ -9,8 +9,9 @@ class VideoModel {
   final DateTime datePublished;
   final int views;
   final String videoId;
-  final UserModel user;
+  final String userId;
   final List likes;
+  final String type;
   VideoModel({
     required this.videoUrl,
     required this.tumbnail,
@@ -18,19 +19,21 @@ class VideoModel {
     required this.datePublished,
     required this.views,
     required this.videoId,
-    required this.user,
+    required this.userId,
     required this.likes,
+    required this.type,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'videoUrl': videoUrl,
       'tumbnail': tumbnail,
+      "type": type,
       'title': title,
       'datePublished': datePublished.millisecondsSinceEpoch,
       'views': views,
       'videoId': videoId,
-      'user': user.toMap(),
+      'user': userId,
       'likes': likes,
     };
   }
@@ -39,15 +42,19 @@ class VideoModel {
     return VideoModel(
       videoUrl: map['videoUrl'] as String,
       tumbnail: map['tumbnail'] as String,
+      type: map["type"] as String,
       title: map['title'] as String,
-      datePublished:
-          DateTime.fromMillisecondsSinceEpoch(map['datePublished'] as int),
+      datePublished: map['datePublished'] is Timestamp
+          ? (map['datePublished'] as Timestamp).toDate()
+          : DateTime.fromMillisecondsSinceEpoch(map['datePublished'] as int),
       views: map['views'] as int,
       videoId: map['videoId'] as String,
-      user: UserModel.fromMap(map['user'] as Map<String, dynamic>),
+      userId: map["userId"] as String,
       likes: List.from(
         (map['likes'] as List),
       ),
     );
   }
 }
+  // datePublished:
+  //         DateTime.fromMillisecondsSinceEpoch(map['datePublished'] as int),

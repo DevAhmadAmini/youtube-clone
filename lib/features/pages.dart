@@ -6,11 +6,11 @@ import 'content_pages/pages/feed_screen.dart';
 List pages = [
   const FeedScreen(),
   const ShortVideoContent(),
-  const SearchScreen(),
   const Center(
     child: Text("Subscribtion"),
   ),
+  const SearchScreen(),
   const Center(
-    child: Text("Library"),
+    child: Text("Subscribtion"),
   ),
 ];

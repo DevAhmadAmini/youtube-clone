@@ -2,8 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import '../model/user.dart';
+import '../model/user_model.dart';
 
 final userDataServiceProvider = Provider(
   (ref) => UserService(
@@ -34,13 +33,13 @@ class UserService {
       photoUrl = userPhotoUrl;
     }
     UserModel userInfo = UserModel(
+      type: "user",
       displayName: displayName,
       username: username,
       email: email,
       profilePic: photoUrl,
-      suberscribers: [],
+      subscriptions: [],
       videos: 0,
-      views: 3,
       userId: userId,
       description: "",
     );
@@ -49,13 +48,8 @@ class UserService {
         );
   }
 
-  // Future retrieveUserData() async {
-  //   final userDataMap =
-  //       await FirebaseFirestore.instance.collection("users").get();
-  // }
-
   Future<UserModel> retrieveCurrentUserData() async {
-    final userDataMap = await FirebaseFirestore.instance
+    final userDataMap = await firestore
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
@@ -65,24 +59,19 @@ class UserService {
       displayName: userDataMap["displayName"],
       email: userDataMap["email"],
       profilePic: userDataMap["profilePic"],
-      suberscribers: userDataMap["suberscribers"],
+      subscriptions: userDataMap["subscriptions"],
       userId: userDataMap["userId"],
       username: userDataMap["username"],
       videos: userDataMap["videos"],
-      views: userDataMap["views"],
+      type: userDataMap["type"],
     );
     return userModel;
   }
 
-  retrieveCurrentUserData2() async {
-    final userDataMap = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
-    if (userDataMap != null) {
-      UserModel userModel = UserModel.fromMap(userDataMap.data()!);
-
-      return userModel;
-    }
+  Future<DocumentSnapshot<Map<String, dynamic>>> retrieveAnyUserData(
+      userId) async {
+    final DocumentSnapshot<Map<String, dynamic>> user =
+        await firestore.collection("users").doc(userId).get();
+    return user;
   }
 }

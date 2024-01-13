@@ -1,14 +1,11 @@
 // ignore_for_file: invalid_use_of_visible_for_testing_member
 
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youtube_clone/cores/widgets/image_button.dart';
-import 'package:youtube_clone/features/auth/data/model/user.dart';
+import 'package:youtube_clone/features/auth/model/user_model.dart';
 import 'package:youtube_clone/features/content_pages/parts/bottom_navigation.dart';
-import 'cores/screens/error_page.dart';
 import 'cores/widgets/loader.dart';
 import 'features/account/account_page.dart';
 import 'features/auth/providers/user_provider.dart';

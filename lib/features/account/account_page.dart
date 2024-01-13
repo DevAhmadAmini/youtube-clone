@@ -2,7 +2,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_clone/features/account/parts/items.dart';
-import '../auth/data/model/user.dart';
+import '../auth/model/user_model.dart';
 
 class AccountSheet extends StatelessWidget {
   final UserModel userModel;

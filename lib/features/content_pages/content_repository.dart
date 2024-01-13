@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,7 +40,6 @@ class SubscribeRepository {
           list = subscribers;
         },
       );
-      print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa$subscribers");
       // then update the userModel collection first
       await firestore.collection("users").doc(specificUserId).update(
         {

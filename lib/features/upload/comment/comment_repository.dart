@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
-import 'package:youtube_clone/features/auth/data/model/user.dart';
 import 'package:youtube_clone/features/upload/models/comment_model.dart';
 
 final commentRepositoryProvider = Provider(
@@ -22,19 +21,22 @@ class CommentRepository {
   });
 
   addCommentOnFirestore({
-    required UserModel user,
+    required String displayName,
+    required String profilePic,
     required String videoId,
     required String commentText,
     required DateTime date,
   }) async {
     String commentId = const Uuid().v4();
     final comment = CommentModel(
-      user: user,
+      displayName: displayName,
+      profilePic: profilePic,
       commentId: commentId,
       videoId: videoId,
       commentText: commentText,
       date: date,
     );
+
     await firestore.collection("comments").doc(commentId).set(comment.toMap());
   }
 

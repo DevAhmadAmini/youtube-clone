@@ -1,10 +1,12 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youtube_clone/cores/colors.dart';
 import 'package:youtube_clone/cores/widgets/custom_button.dart';
 import 'package:youtube_clone/cores/widgets/loader.dart';
-import 'package:youtube_clone/features/auth/data/model/user.dart';
+import 'package:youtube_clone/features/auth/model/user_model.dart';
 import 'package:youtube_clone/features/auth/providers/user_provider.dart';
 import 'package:youtube_clone/features/content_pages/widgets/post.dart';
 import 'package:youtube_clone/features/search/widgets/search_tile_widget.dart';
@@ -118,32 +120,30 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: ListView.builder(
                           itemCount: foundItems.length,
                           itemBuilder: (context, index) {
-                            List<Widget> items = [];
+                            List<Widget> itemsWidget = [];
                             final currentMap = foundItems[index];
                             if (currentMap["type"] == "video") {
                               VideoModel videoModel =
                                   VideoModel.fromMap(currentMap);
-                              items.add(
+                              itemsWidget.add(
                                 Post(video: videoModel),
                               );
-                              items.shuffle();
                             }
                             if (currentMap["type"] == "user") {
                               final userModel = UserModel.fromMap(currentMap);
-                              items.add(
+                              itemsWidget.add(
                                 SearchUserTileWidget(userModel: userModel),
                               );
-                              items.shuffle();
                             }
 
-                            return items[0];
+                            return itemsWidget[0];
                           },
                         ),
                       ),
                     ],
                   );
                 },
-                error: (error, stackTrace) => ErrorWidget("NO RESUTL"),
+                error: (error, stackTrace) => ErrorWidget("NO RESULT"),
                 loading: () => const Loader(),
               );
         },
